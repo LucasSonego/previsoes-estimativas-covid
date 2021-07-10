@@ -1,4 +1,5 @@
 import DataFetchController from "./DataFetchController";
+import SheetController from "./SheetController";
 
 class PredictionController {
   async getPrediction(req, res) {
@@ -7,6 +8,8 @@ class PredictionController {
       req.body.data,
       req.body.offset
     );
+
+    await SheetController.generateSheet(data);
 
     return res.send(data);
   }
