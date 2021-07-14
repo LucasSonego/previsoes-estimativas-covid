@@ -1,5 +1,6 @@
 import DataFetchController from "./DataFetchController";
 import SheetController from "./SheetController";
+import generatePrediction from "../predictionModel/generate";
 
 class PredictionController {
   async getPrediction(req, res) {
@@ -10,6 +11,8 @@ class PredictionController {
     );
 
     await SheetController.generateSheet(data);
+
+    await generatePrediction();
 
     return res.send(data);
   }
