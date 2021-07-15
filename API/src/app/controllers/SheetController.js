@@ -83,6 +83,30 @@ class SheetController {
         );
       });
   }
+
+  async getSheetData(city) {
+    let workbook = new Excel.Workbook();
+    let predictionData = [];
+    await workbook.xlsx
+      .readFile(`${path.join(__dirname, "../predictionModel/Resultados.xlsx")}`)
+      .then(() => {
+        var worksheet = workbook.getWorksheet(`${city}`);
+        worksheet.eachRow({}, (row, rowNumber) => {
+          if (rowNumber > 1) {
+            let rowData = {
+              dia: row.values[1],
+              suscetiveis: row.values[2],
+              infectados: row.values[3],
+              removidos: row.values[4],
+              recuperados: row.values[5],
+              obitos: row.values[6],
+            };
+            predictionData.push(rowData);
+          }
+        });
+      });
+    return predictionData;
+  }
 }
 
 export default new SheetController();

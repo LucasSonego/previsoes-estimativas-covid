@@ -14,7 +14,9 @@ class PredictionController {
 
     await generatePrediction();
 
-    return res.send(data);
+    let predictionData = await SheetController.getSheetData(data.cityData.nome);
+
+    return res.send({ ...data, predictionData });
   }
 }
 
