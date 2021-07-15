@@ -3,8 +3,9 @@ import databaseConfig from "../config/database";
 
 import Cities from "../app/models/Cities";
 import Reports from "../app/models/Reports";
+import Predictions from "../app/models/Predictions";
 
-const models = [Cities, Reports];
+const models = [Cities, Reports, Predictions];
 
 class Database {
   constructor() {

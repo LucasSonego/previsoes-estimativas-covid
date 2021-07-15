@@ -15,6 +15,10 @@ class Cities extends Model {
       foreignKey: "municipio",
       as: "boletins",
     });
+    this.hasMany(models.Predictions, {
+      foreignKey: "municipio",
+      as: "previsoes",
+    });
   }
 }
 
