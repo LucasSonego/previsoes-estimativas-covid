@@ -20,7 +20,8 @@
     "express": "^4.17.1",
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.9",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "sequelize-cli": "^6.2.0",

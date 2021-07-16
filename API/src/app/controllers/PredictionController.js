@@ -2,13 +2,22 @@ import DataFetchController from "./DataFetchController";
 import SheetController from "./SheetController";
 import Predictions from "../models/Predictions";
 import generatePrediction from "../predictionModel/generate";
+import * as yup from "yup";
 
 class PredictionController {
   async getPrediction(req, res) {
+    let schema = yup.object().shape({
+      cidade: yup.string().required(),
+      data: yup.string().required(),
+      offset: yup.number().required(),
+    });
+
+    if (!schema.isValid(req.query)) return res.sendStatus(400);
+
     let data = await DataFetchController.fetchData(
-      req.body.cidade,
-      req.body.data,
-      req.body.offset
+      req.query.cidade,
+      req.query.data,
+      req.query.offset
     );
 
     let predictionData;
