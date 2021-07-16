@@ -7,6 +7,6 @@ const routes = Router();
 
 routes.use(cors());
 
-routes.get("/teste", PredictionController.getPrediction);
+routes.get("/previsoes", PredictionController.getPrediction);
 
 export default routes;
