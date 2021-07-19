@@ -2,7 +2,7 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 
 import { Container } from "./styles";
-import { ChartData } from "../../interfaces";
+import { ChartData } from "./interfaces";
 
 const chart: React.FC<ChartData> = props => {
   let datasets = props.datasets;
@@ -11,15 +11,13 @@ const chart: React.FC<ChartData> = props => {
   });
 
   return (
-    <Container>
+    <Container height={props.height} width={props.width}>
       <Line
         type="line"
         data={{
           labels: props.labels,
           datasets: datasetsWithProps,
         }}
-        height={props.height}
-        width={props.width}
         options={{
           responsive: true,
           title: { text: "", display: true },

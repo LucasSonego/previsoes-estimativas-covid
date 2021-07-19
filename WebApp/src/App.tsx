@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import api from "./services/api";
 
 import { Container } from "./styles";
-import { PredictionsResponse, ChartData } from "./interfaces";
+import { PredictionsResponse } from "./interfaces";
 import Chart from "./components/Chart";
+import { ChartData } from "./components/Chart/interfaces";
 
 const App: React.FC = () => {
   let [city, setCity] = useState("");
@@ -98,15 +99,17 @@ const App: React.FC = () => {
         placeholder="data"
       />
       <button onClick={() => getPrediction()}>Dale</button>
-      {deathsChartData && (
-        <Chart
-          labels={deathsChartData.labels}
-          datasets={deathsChartData.datasets}
-          height={400}
-          width={600}
-        />
-      )}
-      <div className="charts">
+      <div className="row">
+        {deathsChartData && (
+          <Chart
+            labels={deathsChartData.labels}
+            datasets={deathsChartData.datasets}
+            height={400}
+            width={600}
+          />
+        )}
+      </div>
+      <div className="row">
         {infectedChartData && (
           <Chart
             labels={infectedChartData.labels}

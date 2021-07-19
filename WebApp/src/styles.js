@@ -5,7 +5,7 @@ export const Container = styled.div`
   margin-left: auto;
   margin-right: auto;
 
-  .charts {
+  .row {
     display: flex;
     justify-content: space-between;
   }
