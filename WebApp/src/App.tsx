@@ -7,10 +7,10 @@ import Chart from "./components/Chart";
 import { ChartData } from "./components/Chart/interfaces";
 import { ReportData } from "./components/Report/interfaces";
 import Report from "./components/Report";
+import CitiesDropdown from "./components/CitiesDropdown";
 
 const App: React.FC = () => {
   let [city, setCity] = useState("");
-  let [date, setDate] = useState("");
   let [loading, setLoading] = useState(false);
   let [reportData, setReportData] = useState<ReportData>();
   let [deathsChartData, setDeathsChartData] = useState<ChartData>();
@@ -18,6 +18,7 @@ const App: React.FC = () => {
   let [healedChartData, setHealedChartData] = useState<ChartData>();
 
   async function getPrediction() {
+    if (!city) return;
     setLoading(true);
     let response = await api.get("/previsoes", {
       params: {
@@ -100,28 +101,21 @@ const App: React.FC = () => {
 
   return (
     <Container>
-      <input
-        type="text"
-        value={city}
-        onChange={event => setCity(event.target.value)}
-        placeholder="cidade"
-      />
-      <input
-        type="text"
-        value={date}
-        onChange={event => setDate(event.target.value)}
-        placeholder="data"
-      />
-      <button onClick={() => getPrediction()}>Dale</button>
+      <div className="city-select">
+        <CitiesDropdown value={city} onChange={setCity} />
+        <button className="generate-prediction" onClick={() => getPrediction()}>
+          Gerar Previsão
+        </button>
+      </div>
       <div className="row">
         {reportData && (
           <Report
-            cidade={reportData?.cidade}
-            casos={reportData?.casos}
-            obitos={reportData?.obitos}
-            recuperados={reportData?.recuperados}
-            investigacao={reportData?.investigacao}
-            data={reportData?.data}
+            cidade={reportData.cidade}
+            casos={reportData.casos}
+            obitos={reportData.obitos}
+            recuperados={reportData.recuperados}
+            investigacao={reportData.investigacao}
+            data={reportData.data}
           />
         )}
         {deathsChartData && (
