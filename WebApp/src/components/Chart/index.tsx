@@ -4,7 +4,7 @@ import { Line } from "react-chartjs-2";
 import { Container } from "./styles";
 import { ChartData } from "./interfaces";
 
-const chart: React.FC<ChartData> = props => {
+const Component: React.FC<ChartData> = props => {
   let datasets = props.datasets;
   let datasetsWithProps = datasets.map(dataset => {
     return { ...dataset, fill: "origin" };
@@ -22,25 +22,19 @@ const chart: React.FC<ChartData> = props => {
           responsive: true,
           title: { text: "", display: true },
           scales: {
-            yAxes: [
-              {
-                ticks: {
-                  autoSkip: true,
-                  maxTicksLimit: 10,
-                  beginAtZero: true,
-                },
-                gridLines: {
-                  display: false,
-                },
+            y: {
+              ticks: {
+                stepSize: 1,
+                autoSkip: true,
+                maxTicksLimit: 10,
               },
-            ],
-            xAxes: [
-              {
-                gridLines: {
-                  display: false,
-                },
+            },
+            x: {
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 15,
               },
-            ],
+            },
           },
         }}
       />
@@ -48,4 +42,4 @@ const chart: React.FC<ChartData> = props => {
   );
 };
 
-export default chart;
+export default React.memo(Component);
