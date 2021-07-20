@@ -8,6 +8,7 @@ import { ChartData } from "./components/Chart/interfaces";
 import { ReportData } from "./components/Report/interfaces";
 import Report from "./components/Report";
 import CitiesDropdown from "./components/CitiesDropdown";
+import LoadingAnimation from "./components/LoadingAnimation";
 
 const App: React.FC = () => {
   let [city, setCity] = useState("");
@@ -145,6 +146,7 @@ const App: React.FC = () => {
           />
         )}
       </div>
+      {loading && <LoadingAnimation />}
     </Container>
   );
 };
