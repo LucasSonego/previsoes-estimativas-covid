@@ -17,7 +17,7 @@ class PredictionController {
     let data = await DataFetchController.fetchData(
       req.query.cidade,
       req.query.data,
-      req.query.offset
+      Number(req.query.offset)
     );
 
     let predictionData;
