@@ -33,7 +33,7 @@ const App: React.FC = () => {
       params: {
         cidade: city,
         data: `${day}_${month}_${date.getFullYear()}`,
-        offset: 7,
+        offset: 15,
       },
     });
 
