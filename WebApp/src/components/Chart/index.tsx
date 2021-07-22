@@ -11,7 +11,7 @@ const Component: React.FC<ChartData> = props => {
   });
 
   return (
-    <Container height={props.height} width={props.width}>
+    <Container>
       <Line
         type="line"
         data={{
@@ -20,6 +20,7 @@ const Component: React.FC<ChartData> = props => {
         }}
         options={{
           responsive: true,
+          maintainAspectRatio: false,
           title: { text: "", display: true },
           scales: {
             y: {

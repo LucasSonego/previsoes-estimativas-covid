@@ -1,13 +1,13 @@
 import React from "react";
 
 import { ReportData } from "./interfaces";
-import { Container, ExtraValue, Label, Value } from "./styles";
+import { Container, ExtraValue, Label, Value, Row } from "./styles";
 
 const Report: React.FC<ReportData> = props => {
   return (
     <Container>
       <h2>Boletim:</h2>
-      <div className="row">
+      <Row>
         <div className="cidade">
           <Label>Município</Label>
           <Value>{props.cidade}</Value>
@@ -17,8 +17,8 @@ const Report: React.FC<ReportData> = props => {
           <Label>Casos</Label>
           <Value>{props.casos}</Value>
         </div>
-      </div>
-      <div className="row">
+      </Row>
+      <Row>
         <div className="obitos">
           <Label>Óbitos</Label>
           <Value>{props.obitos}</Value>
@@ -31,9 +31,9 @@ const Report: React.FC<ReportData> = props => {
           <Label>Recuperados</Label>
           <Value>{props.recuperados}</Value>
         </div>
-      </div>
+      </Row>
 
-      <div className="row">
+      <Row>
         <div className="investigacao">
           <Label>Em Investigação</Label>
           <Value>{props.investigacao}</Value>
@@ -43,7 +43,7 @@ const Report: React.FC<ReportData> = props => {
           <Label>Data</Label>
           <Value>{props.data}</Value>
         </div>
-      </div>
+      </Row>
       <span className="fonte">fonte: Secretaria de Saúde do Paraná</span>
     </Container>
   );

@@ -4,14 +4,22 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 400px;
-  width: 600px;
-  background-color: #eee;
+
+  background-color: #eeed;
   border-radius: 15px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  @media (min-width: 1275px) {
+    height: 400px;
+    width: 600px;
+  }
+  @media (max-width: 1274px) {
+    height: 70%;
+    width: 100%;
+  }
 
   h2 {
     margin-top: 50px;

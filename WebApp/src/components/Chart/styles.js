@@ -1,6 +1,13 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  height: ${props => (props.height ? `${props.height}px` : "auto")};
-  width: ${props => (props.width ? `${props.width}px` : "auto")};
+  @media (min-width: 1275px) {
+    height: 400px;
+    width: 600px;
+  }
+  @media (max-width: 1274px) {
+    height: 300px;
+    width: 100%;
+    max-width: 800px;
+  }
 `;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "./services/api";
 
-import { Container } from "./styles";
+import { Container, Row } from "./styles";
 import { PredictionsResponse } from "./interfaces";
 import Chart from "./components/Chart";
 import { ChartData } from "./components/Chart/interfaces";
@@ -116,7 +116,7 @@ const App: React.FC = () => {
           Gerar Previsão
         </button>
       </div>
-      <div className="row">
+      <Row>
         {reportData && (
           <Report
             cidade={reportData.cidade}
@@ -131,29 +131,23 @@ const App: React.FC = () => {
           <Chart
             labels={deathsChartData.labels}
             datasets={deathsChartData.datasets}
-            height={400}
-            width={600}
           />
         )}
-      </div>
-      <div className="row">
+      </Row>
+      <Row>
         {infectedChartData && (
           <Chart
             labels={infectedChartData.labels}
             datasets={infectedChartData.datasets}
-            height={400}
-            width={600}
           />
         )}
         {healedChartData && (
           <Chart
             labels={healedChartData.labels}
             datasets={healedChartData.datasets}
-            height={400}
-            width={600}
           />
         )}
-      </div>
+      </Row>
       {loading && <LoadingAnimation />}
     </Container>
   );
