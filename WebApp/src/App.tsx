@@ -21,10 +21,18 @@ const App: React.FC = () => {
   async function getPrediction() {
     if (!city) return;
     setLoading(true);
+    let date = new Date();
+    let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+    let month =
+      date.getMonth() + 1 < 10
+        ? `0${date.getMonth() + 1}`
+        : date.getMonth() + 1;
+
+    console.log(`${day}_${month}_${date.getFullYear()}`);
     let response = await api.get("/previsoes", {
       params: {
         cidade: city,
-        data: date,
+        data: `${day}_${month}_${date.getFullYear()}`,
         offset: 7,
       },
     });
