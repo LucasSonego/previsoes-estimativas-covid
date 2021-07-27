@@ -12,7 +12,10 @@ class PredictionController {
       offset: yup.number().required(),
     });
 
-    if (!schema.isValid(req.query)) return res.sendStatus(400);
+    let validReqData = await schema.isValid(req.query);
+    if (!validReqData) {
+      return res.sendStatus(400);
+    }
 
     let data = await DataFetchController.fetchData(
       req.query.cidade,

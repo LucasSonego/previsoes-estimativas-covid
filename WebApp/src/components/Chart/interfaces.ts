@@ -7,6 +7,4 @@ interface ChartDataset {
 export interface ChartData {
   labels: string[];
   datasets: ChartDataset[];
-  height?: number;
-  width?: number;
 }

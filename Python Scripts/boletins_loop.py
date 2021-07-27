@@ -5,7 +5,7 @@ from config import *
 
 dia = 1
 while dia <= 31:
-    strdia = "";
+    strdia = ""
     if dia < 10:
         strdia = "0" + str(dia)
     else:

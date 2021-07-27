@@ -6,7 +6,7 @@ const LoadingAnimation: React.FC = () => {
   return (
     <Container>
       <h2>Gerando Previsão...</h2>
-      <h3>Este processo dura em torno de 40 segundos</h3>
+      <h3>Este processo dura alguns segundos</h3>
       <div className="wrapper">
         <div className="box-wrap">
           <div className="box one"></div>

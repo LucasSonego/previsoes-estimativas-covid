@@ -220,8 +220,8 @@ resultados_acu=resultados_aumulados(resultados)
 resultados_diadia_acu=round.(Int, resultados_diarios_acu(resultados_acu,temp_prev))
 
 #gráficos
-pyplot()
-theme(:default)
+# pyplot()
+# theme(:default)
 #registros
 # for reg=1:num_reg
 #     #p=plot(resultados[:,1,reg],[resultados[:, 2, reg] resultados[:, 3, reg] resultados[:, 5, reg] resultados[:, 6, reg]], #com suscetíveis

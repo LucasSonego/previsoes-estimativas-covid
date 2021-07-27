@@ -33,7 +33,7 @@ const App: React.FC = () => {
       params: {
         cidade: city,
         data: `${day}_${month}_${date.getFullYear()}`,
-        offset: 15,
+        offset: 14,
       },
     });
 
@@ -77,8 +77,6 @@ const App: React.FC = () => {
           backgroundColor: "#e74d3c81",
         },
       ],
-      height: 400,
-      width: 600,
     });
     setInfectedChartData({
       labels: chartLabels,
@@ -89,8 +87,6 @@ const App: React.FC = () => {
           backgroundColor: "#e78f3c81",
         },
       ],
-      height: 400,
-      width: 600,
     });
     setHealedChartData({
       labels: chartLabels,
@@ -101,8 +97,6 @@ const App: React.FC = () => {
           backgroundColor: "#4ae73c81",
         },
       ],
-      height: 400,
-      width: 600,
     });
 
     setLoading(false);
