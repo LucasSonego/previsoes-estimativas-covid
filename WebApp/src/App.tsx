@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "./services/api";
 
-import { Container, Row } from "./styles";
+import { Wrapper, Container, Row } from "./styles";
 import { PredictionsResponse } from "./interfaces";
 import Chart from "./components/Chart";
 import { ChartData } from "./components/Chart/interfaces";
@@ -9,6 +9,7 @@ import { ReportData } from "./components/Report/interfaces";
 import Report from "./components/Report";
 import CitiesDropdown from "./components/CitiesDropdown";
 import LoadingAnimation from "./components/LoadingAnimation";
+import Footer from "./components/Footer";
 
 const App: React.FC = () => {
   let [city, setCity] = useState("");
@@ -103,47 +104,53 @@ const App: React.FC = () => {
   }
 
   return (
-    <Container>
-      <div className="city-select">
-        <CitiesDropdown value={city} onChange={setCity} />
-        <button className="generate-prediction" onClick={() => getPrediction()}>
-          Gerar Previsão
-        </button>
-      </div>
-      <Row>
-        {reportData && (
-          <Report
-            cidade={reportData.cidade}
-            casos={reportData.casos}
-            obitos={reportData.obitos}
-            recuperados={reportData.recuperados}
-            investigacao={reportData.investigacao}
-            data={reportData.data}
-          />
-        )}
-        {deathsChartData && (
-          <Chart
-            labels={deathsChartData.labels}
-            datasets={deathsChartData.datasets}
-          />
-        )}
-      </Row>
-      <Row>
-        {infectedChartData && (
-          <Chart
-            labels={infectedChartData.labels}
-            datasets={infectedChartData.datasets}
-          />
-        )}
-        {healedChartData && (
-          <Chart
-            labels={healedChartData.labels}
-            datasets={healedChartData.datasets}
-          />
-        )}
-      </Row>
-      {loading && <LoadingAnimation />}
-    </Container>
+    <Wrapper>
+      <Container>
+        <div className="city-select">
+          <CitiesDropdown value={city} onChange={setCity} />
+          <button
+            className="generate-prediction"
+            onClick={() => getPrediction()}
+          >
+            Gerar Previsão
+          </button>
+        </div>
+        <Row>
+          {reportData && (
+            <Report
+              cidade={reportData.cidade}
+              casos={reportData.casos}
+              obitos={reportData.obitos}
+              recuperados={reportData.recuperados}
+              investigacao={reportData.investigacao}
+              data={reportData.data}
+            />
+          )}
+          {deathsChartData && (
+            <Chart
+              labels={deathsChartData.labels}
+              datasets={deathsChartData.datasets}
+            />
+          )}
+        </Row>
+        <Row>
+          {infectedChartData && (
+            <Chart
+              labels={infectedChartData.labels}
+              datasets={infectedChartData.datasets}
+            />
+          )}
+          {healedChartData && (
+            <Chart
+              labels={healedChartData.labels}
+              datasets={healedChartData.datasets}
+            />
+          )}
+        </Row>
+        {loading && <LoadingAnimation />}
+      </Container>
+      <Footer />
+    </Wrapper>
   );
 };
 

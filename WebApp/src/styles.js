@@ -1,10 +1,17 @@
 import styled from "styled-components";
 
+export const Wrapper = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
+
 export const Container = styled.div`
   max-width: 1320px;
   margin-left: auto;
   margin-right: auto;
   padding: 20px;
+  width: 100%;
 
   .city-select {
     max-width: 900px;
