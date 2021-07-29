@@ -1,7 +1,10 @@
 import DataFetchController from "./DataFetchController";
 import SheetController from "./SheetController";
 import Predictions from "../models/Predictions";
-import generatePrediction from "../predictionModel/generate";
+import {
+  generatePrediction,
+  deleteSheets,
+} from "../predictionModel/PredictionModelFunctions";
 import * as yup from "yup";
 
 class PredictionController {
@@ -36,11 +39,16 @@ class PredictionController {
     if (predictionData) {
       predictionData = JSON.parse(predictionData.previsoes);
     } else {
-      await SheetController.generateSheet(data);
+      const timestamp = Date.now();
 
-      await generatePrediction();
+      await SheetController.generateSheet(data, timestamp);
 
-      predictionData = await SheetController.getSheetData(data.cityData.nome);
+      await generatePrediction(timestamp);
+
+      predictionData = await SheetController.getSheetData(
+        data.cityData.nome,
+        timestamp
+      );
 
       await Predictions.create({
         municipio: data.cityData.nome,
@@ -48,6 +56,8 @@ class PredictionController {
         data: data.dateReport.dataValues.dia,
         dataOffset: data.offsetReport.dataValues.dia,
       });
+
+      deleteSheets(timestamp);
     }
 
     return res.send({ ...data, predictions: predictionData });

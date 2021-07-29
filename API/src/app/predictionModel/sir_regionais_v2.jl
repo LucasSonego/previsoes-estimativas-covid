@@ -162,35 +162,35 @@ function resultados_diarios(resultados,temp_prev)
     return resultados_diadia
 end
 
-function resultados_aumulados(resultados)
-    aux1=length(resultados[1,1,:]) #número registros na planilha sir
-    aux2=length(resultados[:,1,1]) #numero de linhas
-    aux3=length(resultados[1,:,1]) #numero de colunas
-    resultados_acu=zeros(aux2,aux3)
-    resultados_acu[:,1]=resultados[:,1,1]
-    for i=1:aux1
-        resultados_acu[:,2:aux3]=resultados_acu[:,2:aux3]+resultados[:,2:aux3,i]
-    end
-    return resultados_acu
-end
+# function resultados_aumulados(resultados)
+#     aux1=length(resultados[1,1,:]) #número registros na planilha sir
+#     aux2=length(resultados[:,1,1]) #numero de linhas
+#     aux3=length(resultados[1,:,1]) #numero de colunas
+#     resultados_acu=zeros(aux2,aux3)
+#     resultados_acu[:,1]=resultados[:,1,1]
+#     for i=1:aux1
+#         resultados_acu[:,2:aux3]=resultados_acu[:,2:aux3]+resultados[:,2:aux3,i]
+#     end
+#     return resultados_acu
+# end
 
-function resultados_diarios_acu(resultados_acu,temp_prev)
-    aux2=length(resultados_acu[:,1]) #numero de linhas
-    aux3=length(resultados_acu[1,:]) #numero de colunas
-    resultados_diadia_acu=zeros(temp_prev+1,aux3)
-    cont=0
-    for j=1:aux2
-        if resultados_acu[j, 1]>=cont
-            cont=cont+1
-            resultados_diadia_acu[cont,:]=resultados_acu[j,:]
-        end
-    end
-    return resultados_diadia_acu
-end
+# function resultados_diarios_acu(resultados_acu,temp_prev)
+#     aux2=length(resultados_acu[:,1]) #numero de linhas
+#     aux3=length(resultados_acu[1,:]) #numero de colunas
+#     resultados_diadia_acu=zeros(temp_prev+1,aux3)
+#     cont=0
+#     for j=1:aux2
+#         if resultados_acu[j, 1]>=cont
+#             cont=cont+1
+#             resultados_diadia_acu[cont,:]=resultados_acu[j,:]
+#         end
+#     end
+#     return resultados_diadia_acu
+# end
 
 
 #Ler planilha de dados
-xf = XLSX.readxlsx("Dados.xlsx")
+xf = XLSX.readxlsx(string(ARGS[], ".xlsx"))
 sir=xf["sir"]
 par=xf["parâmetros"]
 
@@ -216,8 +216,8 @@ tf=sir[2,c_dt1_dt0]
 alfa_beta=matriz_alfa_beta(num_reg) #[regional, alfa, beta, R0]
 resultados=resultados_3d(temp_prev,num_reg) #matriz 3d. Para cada regional: [t, S, I, Removidos, Recuperados, Obitos]
 resultados_diadia=round.(Int, resultados_diarios(resultados,temp_prev))
-resultados_acu=resultados_aumulados(resultados)
-resultados_diadia_acu=round.(Int, resultados_diarios_acu(resultados_acu,temp_prev))
+# resultados_acu=resultados_aumulados(resultados)
+# resultados_diadia_acu=round.(Int, resultados_diarios_acu(resultados_acu,temp_prev))
 
 #gráficos
 # pyplot()
@@ -247,7 +247,7 @@ resultados_diadia_acu=round.(Int, resultados_diarios_acu(resultados_acu,temp_pre
 
 # XLSX.sheetnames(xf) #não sei se preciso disso aqui!
 
-XLSX.openxlsx("Resultados.xlsx", mode="w") do xf
+XLSX.openxlsx(string(ARGS[], "Resultados.xlsx"), mode="w") do xf
     R0 = xf[1]
     XLSX.rename!(R0, "R0")
     R0[1,1] = "Índice"
@@ -280,20 +280,20 @@ XLSX.openxlsx("Resultados.xlsx", mode="w") do xf
         end
     end
     ############################################
-    aux1=length(resultados_diadia_acu[:,1])#linhas
-    aux2=length(resultados_diadia_acu[1,:])#colunas
-    XLSX.addsheet!(xf, "acumulados")
-    sheet = xf[num_reg+2]
-    sheet[1,1] = "Data"
-    sheet[1,2] = "Suscetíveis"
-    sheet[1,3] = "Infectados"
-    sheet[1,4] = "Removidos"
-    sheet[1,5] = "Recuperados"
-    sheet[1,6] = "Óbitos"
-    for i=1:aux1
-        sheet[i+1,1] = sir[num_reg+1,c_dt1]+ Dates.Day(resultados_diadia_acu[i,1])
-        sheet[i+1,2:aux2] = resultados_diadia_acu[i,2:aux2]
-    end
+    # aux1=length(resultados_diadia_acu[:,1])#linhas
+    # aux2=length(resultados_diadia_acu[1,:])#colunas
+    # XLSX.addsheet!(xf, "acumulados")
+    # sheet = xf[num_reg+2]
+    # sheet[1,1] = "Data"
+    # sheet[1,2] = "Suscetíveis"
+    # sheet[1,3] = "Infectados"
+    # sheet[1,4] = "Removidos"
+    # sheet[1,5] = "Recuperados"
+    # sheet[1,6] = "Óbitos"
+    # for i=1:aux1
+    #     sheet[i+1,1] = sir[num_reg+1,c_dt1]+ Dates.Day(resultados_diadia_acu[i,1])
+    #     sheet[i+1,2:aux2] = resultados_diadia_acu[i,2:aux2]
+    # end
 end
 
 

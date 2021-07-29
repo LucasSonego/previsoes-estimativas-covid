@@ -27,7 +27,7 @@ const cells = {
 };
 
 class SheetController {
-  async generateSheet(data) {
+  async generateSheet(data, timestamp) {
     const cityData = data.cityData.dataValues;
     const dateReport = data.dateReport.dataValues;
     const offsetReport = data.offsetReport.dataValues;
@@ -79,16 +79,21 @@ class SheetController {
           dateReport.obitos / (dateReport.obitos + dateReport.recuperados);
 
         return workbook.xlsx.writeFile(
-          `${path.join(__dirname, "../predictionModel/Dados.xlsx")}`
+          `${path.join(__dirname, `../predictionModel/${timestamp}.xlsx`)}`
         );
       });
   }
 
-  async getSheetData(city) {
+  async getSheetData(city, timestamp) {
     let workbook = new Excel.Workbook();
     let predictionData = [];
     await workbook.xlsx
-      .readFile(`${path.join(__dirname, "../predictionModel/Resultados.xlsx")}`)
+      .readFile(
+        `${path.join(
+          __dirname,
+          `../predictionModel/${timestamp}Resultados.xlsx`
+        )}`
+      )
       .then(() => {
         var worksheet = workbook.getWorksheet(`${city}`);
         worksheet.eachRow({}, (row, rowNumber) => {
