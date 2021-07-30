@@ -10,6 +10,7 @@ import Report from "./components/Report";
 import CitiesDropdown from "./components/CitiesDropdown";
 import LoadingAnimation from "./components/LoadingAnimation";
 import Footer from "./components/Footer";
+import About from "./components/About";
 
 const App: React.FC = () => {
   let [city, setCity] = useState("");
@@ -149,6 +150,7 @@ const App: React.FC = () => {
         </Row>
         {loading && <LoadingAnimation />}
       </Container>
+      <About />
       <Footer />
     </Wrapper>
   );
