@@ -13,5 +13,5 @@ A previsão tem como base o Modelo Matemático SIR (Suscetíveis → Infectados 
 | Rodrigo André Schulz               | Lucas Sônego Candiotto       | Victoria Carraro Bernardes da Silva |
 | Samuel Willian Schwertner Costiche | Gabriel Angelo Cerutti       | Willian dos Santos da Luz           |
 | Carlos Henrique Coimbra de Araujo  | Marcos Antonio Schreiner     | Stéphanie Patel Pasqualoto          |
-| Alexandre Luis Trovon de Carvalho  |                              | Daniel Henrique Berger              |
+| Alexandre Luis Trovon de Carvalho  | Anderson da Silva Marcolino  | Daniel Henrique Berger              |
 
