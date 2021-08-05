@@ -33,9 +33,16 @@ export const Container = styled.div`
     }
 
     img {
-      height: 127px;
-      width: 190px;
+      height: 104px;
+      width: 146px;
+    }
+
+    .logo-ufpr {
+      height: min-content;
       margin-right: 15px;
+      margin-top: 20px;
+
+      margin: 20px 15px 0 20px;
     }
 
     .section {

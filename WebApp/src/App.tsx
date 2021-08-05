@@ -11,6 +11,7 @@ import CitiesDropdown from "./components/CitiesDropdown";
 import LoadingAnimation from "./components/LoadingAnimation";
 import Footer from "./components/Footer";
 import About from "./components/About";
+import Header from "./components/Header";
 
 const App: React.FC = () => {
   let [city, setCity] = useState("");
@@ -106,6 +107,7 @@ const App: React.FC = () => {
 
   return (
     <Wrapper>
+      <Header />
       <Container>
         <div className="city-select">
           <CitiesDropdown value={city} onChange={setCity} />

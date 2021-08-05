@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   max-width: 1200px;
-  margin: 20px auto;
+  margin: 20px auto 50px auto;
   text-align: center;
   padding: 0 20px;
   img {

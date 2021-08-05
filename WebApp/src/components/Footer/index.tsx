@@ -1,14 +1,21 @@
 import React from "react";
 
 import { Container } from "./styles";
-import ufprLogo from "../../assets/UFPR.png";
+import ufprLogo from "../../assets/UFPR-palotina.png";
 import ExpandingLabel from "../ExpandingLabel";
 
 const Footer: React.FC = () => {
   return (
     <Container>
       <div className="content">
-        <img src={ufprLogo} alt="" srcSet="" />
+        <a
+          href="http://www.palotina.ufpr.br/portal/"
+          target="_blank"
+          rel="noreferrer"
+          className="logo-ufpr"
+        >
+          <img src={ufprLogo} alt="UFPR Setor Palotina" srcSet="" />
+        </a>
         <div className="section">
           <h3>Modelagem Matemática</h3>
           <ExpandingLabel maxHeight="70px">
@@ -86,6 +93,15 @@ const Footer: React.FC = () => {
               <h4>Marcos Antonio Schreiner</h4>
               <span>Pesquisador - UFPR Palotina</span>
               <a href="mailto:marcosantonio@ufpr.br">marcosantonio@ufpr.br</a>
+            </div>
+          </ExpandingLabel>
+          <ExpandingLabel maxHeight="70px">
+            <div className="people">
+              <h4>Anderson da Silva Marcolino</h4>
+              <span>Pesquisador - UFPR Palotina</span>
+              <a href="mailto:anderson.marcolino@ufpr.br">
+                anderson.marcolino@ufpr.br
+              </a>
             </div>
           </ExpandingLabel>
         </div>
