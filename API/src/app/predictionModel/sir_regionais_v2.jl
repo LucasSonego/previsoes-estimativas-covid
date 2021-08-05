@@ -3,7 +3,7 @@
 # rodrigo.schulz@ufpr.br
 # http://lattes.cnpq.br/3138448810046000
 
-using Plots
+# using Plots
 using XLSX
 using Dates
 
