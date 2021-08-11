@@ -11,10 +11,10 @@ export const Container = styled.div`
     margin: 0 auto;
     display: flex;
 
-    @media (min-width: 1000px) {
+    @media (min-width: 1200px) {
       justify-content: space-between;
     }
-    @media (max-width: 1000px) {
+    @media (max-width: 1199px) {
       flex-direction: column;
       align-items: center;
       .section {
@@ -32,17 +32,24 @@ export const Container = styled.div`
       }
     }
 
-    img {
-      height: 104px;
-      width: 146px;
+    .palotina {
+      height: 90px;
+      width: 127px;
+      margin-right: 25px;
+    }
+
+    .ufpr {
+      height: 100px;
+      width: 150px;
     }
 
     .logo-ufpr {
+      display: flex;
       height: min-content;
       margin-right: 15px;
       margin-top: 20px;
 
-      margin: 20px 15px 0 20px;
+      margin: 20px 30px 0 20px;
     }
 
     .section {

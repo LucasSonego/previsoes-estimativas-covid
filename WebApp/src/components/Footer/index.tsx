@@ -1,7 +1,8 @@
 import React from "react";
 
 import { Container } from "./styles";
-import ufprLogo from "../../assets/UFPR-palotina.png";
+import ufprPalotinaLogo from "../../assets/UFPR-palotina.png";
+import ufprLogo from "../../assets/UFPR.png";
 import ExpandingLabel from "../ExpandingLabel";
 
 const Footer: React.FC = () => {
@@ -14,7 +15,18 @@ const Footer: React.FC = () => {
           rel="noreferrer"
           className="logo-ufpr"
         >
-          <img src={ufprLogo} alt="UFPR Setor Palotina" srcSet="" />
+          <img
+            className="palotina"
+            src={ufprPalotinaLogo}
+            alt="UFPR Setor Palotina"
+            srcSet=""
+          />
+          <img
+            className="ufpr"
+            src={ufprLogo}
+            alt="UFPR Setor Palotina"
+            srcSet=""
+          />
         </a>
         <div className="section">
           <h3>Modelagem Matemática</h3>
