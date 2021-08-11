@@ -5,6 +5,7 @@ function asyncExec(command) {
     exec(command, (error, stdout, stderr) => {
       if (error) {
         console.warn(error);
+        // console.log(error)
       }
       resolve(stdout ? stdout : stderr);
     });

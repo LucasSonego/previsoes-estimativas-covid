@@ -6,6 +6,7 @@ import {
   deleteSheets,
 } from "../predictionModel/PredictionModelFunctions";
 import * as yup from "yup";
+import DateController from "./DateController";
 
 class PredictionController {
   async getPrediction(req, res) {
@@ -20,47 +21,66 @@ class PredictionController {
       return res.sendStatus(400);
     }
 
-    let data = await DataFetchController.fetchData(
-      req.query.cidade,
-      req.query.data,
-      Number(req.query.offset)
-    );
+    let data;
+    const MAX_TRIES = 4;
 
-    let predictionData;
+    for (let tries = 0; tries < MAX_TRIES; tries++) {
+      let timestamp = Date.now();
+      if (!data) {
+        data = await DataFetchController.fetchData(
+          req.query.cidade,
+          req.query.data,
+          Number(req.query.offset)
+        );
+      } else {
+        let fallbackDate = DateController.subtractDate(
+          data.dateReport.dataValues.dia,
+          1
+        );
+        data = await DataFetchController.fetchData(
+          req.query.cidade,
+          fallbackDate,
+          Number(req.query.offset)
+        );
+      }
 
-    predictionData = await Predictions.findOne({
-      where: {
-        municipio: data.cityData.nome,
-        data: data.dateReport.dataValues.dia,
-        dataOffset: data.offsetReport.dataValues.dia,
-      },
-    });
-
-    if (predictionData) {
-      predictionData = JSON.parse(predictionData.previsoes);
-    } else {
-      const timestamp = Date.now();
-
-      await SheetController.generateSheet(data, timestamp);
-
-      await generatePrediction(timestamp);
-
-      predictionData = await SheetController.getSheetData(
-        data.cityData.nome,
-        timestamp
-      );
-
-      await Predictions.create({
-        municipio: data.cityData.nome,
-        previsoes: JSON.stringify(predictionData),
-        data: data.dateReport.dataValues.dia,
-        dataOffset: data.offsetReport.dataValues.dia,
+      let predictionData = await Predictions.findOne({
+        where: {
+          municipio: data.cityData.nome,
+          data: data.dateReport.dataValues.dia,
+          dataOffset: data.offsetReport.dataValues.dia,
+        },
       });
 
-      deleteSheets(timestamp);
-    }
+      if (predictionData) {
+        predictionData = JSON.parse(predictionData.previsoes);
+        return res.send({ ...data, predictions: predictionData });
+      } else {
+        await SheetController.generateSheet(data, timestamp);
 
-    return res.send({ ...data, predictions: predictionData });
+        await generatePrediction(timestamp);
+
+        predictionData = await SheetController.getSheetData(
+          data.cityData.nome,
+          timestamp
+        );
+
+        await deleteSheets(timestamp);
+
+        if (predictionData) {
+
+          await Predictions.create({
+            municipio: data.cityData.nome,
+            previsoes: JSON.stringify(predictionData),
+            data: data.dateReport.dataValues.dia,
+            dataOffset: data.offsetReport.dataValues.dia,
+          });
+
+          return res.send({ ...data, predictions: predictionData });
+        }
+      }
+    }
+    return res.sendStatus(500);
   }
 }
 

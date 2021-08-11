@@ -87,29 +87,33 @@ class SheetController {
   async getSheetData(city, timestamp) {
     let workbook = new Excel.Workbook();
     let predictionData = [];
-    await workbook.xlsx
-      .readFile(
-        `${path.join(
-          __dirname,
-          `../predictionModel/${timestamp}Resultados.xlsx`
-        )}`
-      )
-      .then(() => {
-        var worksheet = workbook.getWorksheet(`${city}`);
-        worksheet.eachRow({}, (row, rowNumber) => {
-          if (rowNumber > 1) {
-            let rowData = {
-              dia: row.values[1],
-              suscetiveis: row.values[2],
-              infectados: row.values[3],
-              removidos: row.values[4],
-              recuperados: row.values[5],
-              obitos: row.values[6],
-            };
-            predictionData.push(rowData);
-          }
+    try {
+      await workbook.xlsx
+        .readFile(
+          `${path.join(
+            __dirname,
+            `../predictionModel/${timestamp}Resultados.xlsx`
+          )}`
+        )
+        .then(() => {
+          var worksheet = workbook.getWorksheet(`${city}`);
+          worksheet.eachRow({}, (row, rowNumber) => {
+            if (rowNumber > 1) {
+              let rowData = {
+                dia: row.values[1],
+                suscetiveis: row.values[2],
+                infectados: row.values[3],
+                removidos: row.values[4],
+                recuperados: row.values[5],
+                obitos: row.values[6],
+              };
+              predictionData.push(rowData);
+            }
+          });
         });
-      });
+    } catch {
+      return null;
+    }
     return predictionData;
   }
 }
