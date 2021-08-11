@@ -6,6 +6,7 @@ import {
   deleteSheets,
 } from "../predictionModel/PredictionModelFunctions";
 import * as yup from "yup";
+import log from "../util/log";
 import DateController from "./DateController";
 
 class PredictionController {
@@ -37,6 +38,7 @@ class PredictionController {
           data.dateReport.dataValues.dia,
           1
         );
+        log(`Trying with ${fallbackDate} (${data.cityData.nome})`);
         data = await DataFetchController.fetchData(
           req.query.cidade,
           fallbackDate,
@@ -54,6 +56,7 @@ class PredictionController {
 
       if (predictionData) {
         predictionData = JSON.parse(predictionData.previsoes);
+        log(`Found already processed prediction (${data.cityData.nome})`);
         return res.send({ ...data, predictions: predictionData });
       } else {
         await SheetController.generateSheet(data, timestamp);
@@ -68,6 +71,7 @@ class PredictionController {
         await deleteSheets(timestamp);
 
         if (predictionData) {
+          log(`Prediction processed successfully (${data.cityData.nome})`);
 
           await Predictions.create({
             municipio: data.cityData.nome,

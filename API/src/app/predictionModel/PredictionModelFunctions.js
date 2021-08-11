@@ -1,10 +1,11 @@
 import { exec } from "child_process";
+import log from "../util/log";
 
 function asyncExec(command) {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        console.warn(error);
+        log("warn: error at asyncExec");
         // console.log(error)
       }
       resolve(stdout ? stdout : stderr);

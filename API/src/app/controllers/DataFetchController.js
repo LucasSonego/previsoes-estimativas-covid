@@ -1,6 +1,7 @@
 import Cities from "../models/Cities";
 import Reports from "../models/Reports";
 import DateController from "./DateController";
+import log from "../util/log";
 
 const MAX_ATTEMPTS = 5;
 
@@ -16,12 +17,12 @@ async function fetchFromDate(city, date) {
     });
 
     if (report == null) {
-      console.log(`${reportDate} not found`);
+      log(`${reportDate} not found (${city})`);
       reportDate = DateController.subtractDate(reportDate, 1);
       attempts++;
     } else {
       found = true;
-      console.log(`found: ${reportDate}`);
+      log(`found: ${reportDate} (${city})`);
     }
   }
 
