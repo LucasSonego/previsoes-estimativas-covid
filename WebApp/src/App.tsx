@@ -17,13 +17,22 @@ const App: React.FC = () => {
   let [city, setCity] = useState("");
   let [loading, setLoading] = useState(false);
   let [reportData, setReportData] = useState<ReportData>();
-  let [deathsChartData, setDeathsChartData] = useState<ChartData>();
-  let [infectedChartData, setInfectedChartData] = useState<ChartData>();
-  let [healedChartData, setHealedChartData] = useState<ChartData>();
+  let [deathsChartData, setDeathsChartData] = useState<ChartData | undefined>();
+  let [infectedChartData, setInfectedChartData] = useState<
+    ChartData | undefined
+  >();
+  let [healedChartData, setHealedChartData] = useState<ChartData | undefined>();
+  let [warning, setWarning] = useState("");
 
   async function getPrediction() {
     if (!city) return;
     setLoading(true);
+    setReportData(undefined);
+    setDeathsChartData(undefined);
+    setInfectedChartData(undefined);
+    setHealedChartData(undefined);
+    setWarning("");
+
     let date = new Date();
     let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
     let month =
@@ -31,78 +40,83 @@ const App: React.FC = () => {
         ? `0${date.getMonth() + 1}`
         : date.getMonth() + 1;
 
-    console.log(`${day}_${month}_${date.getFullYear()}`);
-    let response = await api.get("/previsoes", {
-      params: {
-        cidade: city,
-        data: `${day}_${month}_${date.getFullYear()}`,
-        offset: 14,
-      },
-    });
-
-    let data: PredictionsResponse;
-    if (response.data) {
-      data = response.data;
-      console.log(data);
-    } else return;
-
-    setReportData({
-      cidade: data.cityData.nome,
-      casos: data.dateReport.casos,
-      obitos: data.dateReport.obitos,
-      recuperados: data.dateReport.recuperados,
-      investigacao: data.dateReport.investigacao,
-      data: data.dateReport.dia.replace("_", "/").replace("_", "/"),
-    });
-
-    let chartLabels: string[] = data.predictions.map(prediction => {
-      let date = new Date(prediction.dia);
-      return `${Intl.DateTimeFormat("pt", { day: "2-digit" }).format(
-        date
-      )} ${Intl.DateTimeFormat("pt", { month: "short" }).format(date)}`;
-    });
-    let chartDeaths: number[] = data.predictions.map(
-      prediction => prediction.obitos
-    );
-    let chartInfected: number[] = data.predictions.map(
-      prediction => prediction.infectados
-    );
-    let chartHealed: number[] = data.predictions.map(
-      prediction => prediction.recuperados
-    );
-
-    setDeathsChartData({
-      labels: chartLabels,
-      datasets: [
-        {
-          label: "Mortes",
-          data: chartDeaths,
-          backgroundColor: "#e74d3c81",
+    api
+      .get("/previsoes", {
+        params: {
+          cidade: city,
+          data: `${day}_${month}_${date.getFullYear()}`,
+          offset: 14,
         },
-      ],
-    });
-    setInfectedChartData({
-      labels: chartLabels,
-      datasets: [
-        {
-          label: "Infectados",
-          data: chartInfected,
-          backgroundColor: "#e78f3c81",
-        },
-      ],
-    });
-    setHealedChartData({
-      labels: chartLabels,
-      datasets: [
-        {
-          label: "Recuperados",
-          data: chartHealed,
-          backgroundColor: "#4ae73c81",
-        },
-      ],
-    });
+      })
+      .then((response: { data: any }) => {
+        let data: PredictionsResponse = response.data;
 
-    setLoading(false);
+        setReportData({
+          cidade: data.cityData.nome,
+          casos: data.dateReport.casos,
+          obitos: data.dateReport.obitos,
+          recuperados: data.dateReport.recuperados,
+          investigacao: data.dateReport.investigacao,
+          data: data.dateReport.dia.replace("_", "/").replace("_", "/"),
+        });
+
+        let chartLabels: string[] = data.predictions.map(
+          (prediction: { dia: string | number | Date }) => {
+            let date = new Date(prediction.dia);
+            return `${Intl.DateTimeFormat("pt", { day: "2-digit" }).format(
+              date
+            )} ${Intl.DateTimeFormat("pt", { month: "short" }).format(date)}`;
+          }
+        );
+        let chartDeaths: number[] = data.predictions.map(
+          prediction => prediction.obitos
+        );
+        let chartInfected: number[] = data.predictions.map(
+          prediction => prediction.infectados
+        );
+        let chartHealed: number[] = data.predictions.map(
+          prediction => prediction.recuperados
+        );
+
+        setDeathsChartData({
+          labels: chartLabels,
+          datasets: [
+            {
+              label: "Mortes",
+              data: chartDeaths,
+              backgroundColor: "#e74d3c81",
+            },
+          ],
+        });
+        setInfectedChartData({
+          labels: chartLabels,
+          datasets: [
+            {
+              label: "Infectados",
+              data: chartInfected,
+              backgroundColor: "#e78f3c81",
+            },
+          ],
+        });
+        setHealedChartData({
+          labels: chartLabels,
+          datasets: [
+            {
+              label: "Recuperados",
+              data: chartHealed,
+              backgroundColor: "#4ae73c81",
+            },
+          ],
+        });
+
+        setLoading(false);
+      })
+      .catch((error: any) => {
+        setWarning(
+          `Não foi possível gerar previsões de ${city} para a data de hoje e nem para datas anteriores`
+        );
+        setLoading(false);
+      });
   }
 
   return (
@@ -118,6 +132,7 @@ const App: React.FC = () => {
             Gerar Previsão
           </button>
         </div>
+        {warning && <div className="warning">{warning}</div>}
         <Row>
           {reportData && (
             <Report

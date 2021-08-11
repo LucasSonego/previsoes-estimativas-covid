@@ -35,6 +35,18 @@ export const Container = styled.div`
     }
   }
 
+  .warning {
+    max-width: 900px;
+    margin: 15px auto;
+    padding: 20px 30px;
+    background: #f39c1255;
+    border: 4px solid #f39c12;
+    border-radius: 5px;
+    color: #333;
+    font-size: 16px;
+    text-align: center;
+  }
+
   @media (min-width: 1275px) {
     .generate-prediction {
       max-width: 300px;
