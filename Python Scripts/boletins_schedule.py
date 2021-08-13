@@ -9,11 +9,19 @@ from config import *
 def buscar_boletim():
     data_atual = date.today().strftime("%d_%m_%Y")
 
-    url = 'https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/'\
-          + data_atual.split("_")[2]+ '-' + data_atual.split("_")[1]+ '/informe_epidemiologico_'\
-          + data_atual + '_obitos_casos_municipio.csv'
-
     try:
+        try:
+            url = 'https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/' + \
+                  data_atual.split("_")[2] + '-' + data_atual.split("_")[1] + '/informe_epidemiologico_' + \
+                  data_atual + '_obitos_casos_municipio.csv'
+
+            arquivoCSV = pd.read_csv(url, sep=';')
+
+        except:
+            url = 'https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/' + \
+                  data_atual.split("_")[2] + '-' + data_atual.split("_")[1] + '/INFORME_EPIDEMIOLOGICO_' + \
+                  data_atual + '_OBITOS_CASOS_Municipio.csv'
+
         arquivoCSV = pd.read_csv(url,sep=';')
 
         cnx = mysql.connector.connect(**config)
@@ -32,15 +40,15 @@ def buscar_boletim():
             try:
                 cursor.execute("INSERT INTO boletins (Municipio, Casos, Obitos, Recuperados, Investigacao, Dia) VALUES (%s,%s,%s,%s,%s,%s);", dados)
             except:
-                print("problema com a inserção dos dados do dia " + data_atual)
+                print("problema com a inserção dos dados do dia " + data_atual + " para " + row[MUNICIPIO])
         cnx.commit()
 
         cursor.close()
         cnx.close()
     except:
-        print("Não há boletim para o dia " + data_atual)
+        print(data_atual + " o boletim foi publicado com um link diferente do padrão")
 
-schedule.every().day.at("18:06").do(buscar_boletim)
+schedule.every().day.at("18:00").do(buscar_boletim)
 
 while True:
     schedule.run_pending()

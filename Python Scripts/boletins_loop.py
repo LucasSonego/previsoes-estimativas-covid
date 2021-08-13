@@ -11,13 +11,22 @@ while dia <= 31:
     else:
         strdia = str(dia)
 
-    dataAtual = strdia + "_04_2021"
-
-    url = 'https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/2021-'+ \
-          dataAtual.split("_")[1]+ '/informe_epidemiologico_'+dataAtual+'_obitos_casos_municipio.csv'
+    data_atual = strdia + "_08_2021"
 
     try:
-        arquivoCSV = pd.read_csv(url,sep=';')
+        try:
+            url = 'https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/' + \
+                  data_atual.split("_")[2] + '-' + data_atual.split("_")[1] + '/informe_epidemiologico_' + \
+                  data_atual + '_obitos_casos_municipio.csv'
+
+            arquivoCSV = pd.read_csv(url, sep=';')
+
+        except:
+            url = 'https://www.saude.pr.gov.br/sites/default/arquivos_restritos/files/documento/' + \
+                  data_atual.split("_")[2] + '-' + data_atual.split("_")[1] + '/INFORME_EPIDEMIOLOGICO_' + \
+                  data_atual + '_OBITOS_CASOS_Municipio.csv'
+
+            arquivoCSV = pd.read_csv(url, sep=';')
 
         cnx = mysql.connector.connect(**config)
 
@@ -32,16 +41,16 @@ while dia <= 31:
 
         for row in arquivoCSV.values:
         #   print(row)
-            dados = (row[MUNICIPIO], int(row[CASOS]), int(row[OBITOS]), int(row[RECUPERADOS]), int(row[INVESTIGACAO]), dataAtual)
+            dados = (row[MUNICIPIO], int(row[CASOS]), int(row[OBITOS]), int(row[RECUPERADOS]), int(row[INVESTIGACAO]), data_atual)
             try:
                 cursor.execute("INSERT INTO boletins (Municipio, Casos, Obitos, Recuperados, Investigacao, Dia) VALUES (%s,%s,%s,%s,%s,%s);", dados)
             except:
-                print("problema com a inserção dos dados do dia " + strdia)
+                print("problema com a inserção dos dados do dia " + strdia + " para " + row[MUNICIPIO])
         cnx.commit()
 
         cursor.close()
         cnx.close()
     except:
-        print("Não há boletim para o dia " + strdia)
+        print(strdia + " o boletim foi publicado com um link diferente do padrão")
 
     dia += 1
