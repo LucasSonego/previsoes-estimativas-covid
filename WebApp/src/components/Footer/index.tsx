@@ -137,7 +137,7 @@ const Footer: React.FC = () => {
           </ExpandingLabel>
           <ExpandingLabel maxHeight="70px">
             <div className="people">
-              <h4>Stéphanie Patel Pasqualoto</h4>
+              <h4>Stéphani Patel Pasqualotto</h4>
               <span>Iniciação Científica Junior - UFPR</span>
               <a href="mailto:stephanipatel@ufpr.br">stephanipatel@ufpr.br</a>
             </div>

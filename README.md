@@ -6,12 +6,9 @@ A previsão tem como base o Modelo Matemático SIR (Suscetíveis → Infectados 
 
 <img src="https://i.imgur.com/xNrzClh.png">
 
-
-
 | Modelagem Matemática               | Desenvolvimento da Aplicação | Testes e Estimativas de Erros       |
 | ---------------------------------- | ---------------------------- | ----------------------------------- |
 | Rodrigo André Schulz               | Lucas Sônego Candiotto       | Victoria Carraro Bernardes da Silva |
 | Samuel Willian Schwertner Costiche | Gabriel Angelo Cerutti       | Willian dos Santos da Luz           |
-| Carlos Henrique Coimbra de Araujo  | Marcos Antonio Schreiner     | Stéphanie Patel Pasqualoto          |
+| Carlos Henrique Coimbra de Araujo  | Marcos Antonio Schreiner     | Stéphani Patel Pasqualotto          |
 | Alexandre Luis Trovon de Carvalho  | Anderson da Silva Marcolino  | Daniel Henrique Berger              |
-
