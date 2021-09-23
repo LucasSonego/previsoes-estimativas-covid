@@ -8,6 +8,7 @@ import {
 import * as yup from "yup";
 import log from "../util/log";
 import DateController from "./DateController";
+import FailController from "./FailController";
 
 class PredictionController {
   async getPrediction(req, res) {
@@ -23,47 +24,60 @@ class PredictionController {
     }
 
     let data;
-    const MAX_TRIES = 4;
+    let tryingWithDate = req.query.data;
+    const MAX_TRIES = 5;
 
     for (let tries = 0; tries < MAX_TRIES; tries++) {
-      let timestamp = Date.now();
-      if (!data) {
-        data = await DataFetchController.fetchData(
+      log(`trying with date: ${tryingWithDate}`);
+      let reports = await DataFetchController.fetchData(
+        req.query.cidade,
+        tryingWithDate,
+        Number(req.query.offset)
+      );
+
+      if (reports) {
+        tryingWithDate = reports.dateReport.dataValues.dia;
+      }
+
+      let hadPreviousFails;
+      if (reports) {
+        hadPreviousFails = await FailController.findFail(
           req.query.cidade,
-          req.query.data,
-          Number(req.query.offset)
-        );
-      } else {
-        let fallbackDate = DateController.subtractDate(
-          data.dateReport.dataValues.dia,
-          1
-        );
-        log(`Trying with ${fallbackDate} (${data.cityData.nome})`);
-        data = await DataFetchController.fetchData(
-          req.query.cidade,
-          fallbackDate,
-          Number(req.query.offset)
+          reports.dateReport.dataValues.dia,
+          reports.offsetReport.dataValues.dia
         );
       }
 
-      let predictionData = await Predictions.findOne({
-        where: {
-          municipio: data.cityData.nome,
-          data: data.dateReport.dataValues.dia,
-          dataOffset: data.offsetReport.dataValues.dia,
-        },
-      });
-
-      if (predictionData) {
-        predictionData = JSON.parse(predictionData.previsoes);
-        log(`Found already processed prediction (${data.cityData.nome})`);
-        return res.send({ ...data, predictions: predictionData });
+      if (reports && !hadPreviousFails) {
+        data = reports;
       } else {
+        tryingWithDate = DateController.subtractDate(tryingWithDate, 1);
+      }
+
+      if (data) {
+        let alreadyProcessedData = await Predictions.findOne({
+          where: {
+            municipio: data.cityData.nome,
+            data: data.dateReport.dataValues.dia,
+            dataOffset: data.offsetReport.dataValues.dia,
+          },
+        });
+
+        if (alreadyProcessedData) {
+          let alreadyProcessedPrediction = JSON.parse(
+            alreadyProcessedData.previsoes
+          );
+          log(`Found already processed prediction (${data.cityData.nome})`);
+          return res.send({ ...data, predictions: alreadyProcessedPrediction });
+        }
+
+        let timestamp = Date.now();
+
         await SheetController.generateSheet(data, timestamp);
 
         await generatePrediction(timestamp);
 
-        predictionData = await SheetController.getSheetData(
+        let predictionData = await SheetController.getSheetData(
           data.cityData.nome,
           timestamp
         );
@@ -81,6 +95,15 @@ class PredictionController {
           });
 
           return res.send({ ...data, predictions: predictionData });
+        } else {
+          log(`Failed to generate the predictions (${data.cityData.nome})`);
+
+          await FailController.storeFail(
+            data.cityData.nome,
+            data.dateReport.dataValues.dia,
+            data.offsetReport.dataValues.dia
+          );
+          tryingWithDate = DateController.subtractDate(tryingWithDate, 1);
         }
       }
     }

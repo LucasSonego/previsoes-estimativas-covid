@@ -7,7 +7,7 @@ class Cities extends Model {
         nome: Sequelize.STRING,
         populacao: Sequelize.INTEGER,
       },
-      { sequelize, tableName: "municipios" }
+      { sequelize, tableName: "municipios", timestamps: false }
     );
   }
   static associate(models) {
@@ -18,6 +18,10 @@ class Cities extends Model {
     this.hasMany(models.Predictions, {
       foreignKey: "municipio",
       as: "previsoes",
+    });
+    this.hasMany(models.Fails, {
+      foreignKey: "municipio",
+      as: "falhas",
     });
   }
 }
