@@ -46,7 +46,7 @@ function calibra_alfa_beta(ti,tf,y0,SIR,i1,r1)
     global b1=0.9*beta
     global a0=alfa
     global acu0 = (y[n,2]+y[n,3])-(i1+r1) #f(a0)
-    global alfa = 0.09*alfa0
+    global alfa = 0.9*alfa0
     (t,y)=RK4(ti,tf,y0,SIR)
     global a1=alfa
     global acu1 = (y[n,2]+y[n,3])-(i1+r1) #f(a1)
@@ -104,6 +104,241 @@ function calibra_alfa_beta(ti,tf,y0,SIR,i1,r1)
                 break
             end
         end
+    end
+    if i == numIte+1
+        println(calibra_alfa_beta_2)
+        (alfa, beta) = calibra_alfa_beta_2(ti,tf,y0,SIR,i1,r1)
+    end
+    return (alfa, beta)
+end
+
+function calibra_alfa_beta_2(ti,tf,y0,SIR,i1,r1)
+    global k=0
+    global i=0
+    global j = 0
+    alfa = alfa0
+    beta  = beta0
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global b0=beta
+    global b1=0.9*beta
+    global a0=alfa0
+    global a1=0.9*alfa0
+    global acu0 = (y[n,2]+y[n,3])-(i1+r1) #f(b0)
+    global beta = b1
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global acu1 = (y[n,2]+y[n,3])-(i1+r1) #f(b1)
+    global z0 = y[n,3]-r1 #g(a0)
+    global alfa = a1
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global z1 = y[n,3]-r1 #g(a1)
+    global alfa = a0
+    while i <= numIte
+        global b = b1-acu1*(b1-b0)/(acu1-acu0)
+        global beta = b
+        (t,y)=RK4(ti,tf,y0,SIR)
+        global acu = (y[n,2]+y[n,3])-(i1+r1) #f(b1)
+        if abs(acu) < epsilon
+            global j=2
+            global alfa = a0
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global z0 = y[n,3]-r1 #g(a0)
+            global alfa = a1
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global z1 = y[n,3]-r1 #g(a1)
+            while j <= numIte
+                global a = a1-z1*(a1-a0)/(z1-z0)
+                global alfa = a
+                (t,y)=RK4(ti,tf,y0,SIR)
+                global z = y[n,3]-r1
+                if  abs(z) < epsilon 
+                    global j=numIte
+                end
+                global j = j+1
+                global a0 = a1
+                global z0 = z1
+                global a1 = a
+                global z1 = z
+                global k=k+1
+                println([k, i, j, a0, a1, acu1, b0, b1, z0, z1])
+            end
+            global acu = (y[n,2]+y[n,3])-(i1+r1)
+            global beta = b0
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global acu1 = (y[n,2]+y[n,3])-(i1+r1)
+        end
+        global i=i+1
+        global b0=b1
+        global acu0=acu1
+        global b1=b
+        global acu1=acu
+        global k=k+1 
+        println([k, i, j, a0, a1, acu0, acu1])
+        if abs(acu1) < epsilon
+            global beta = b1
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global z = y[n,3]-r1
+            if abs(z) < epsilon
+                break
+            end
+        end
+    end
+    if i == numIte+1
+        println(calibra_alfa_beta_3)
+        (alfa, beta) = calibra_alfa_beta_3(ti,tf,y0,SIR,i1,r1)
+    end
+    return (alfa, beta)
+end
+
+function calibra_alfa_beta_3(ti,tf,y0,SIR,i1,r1)
+    global k=0
+    global i=0
+    global j = 0
+    alfa = alfa0
+    beta  = beta0
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global b0=beta
+    global b1=0.9*beta
+    global a0=alfa
+    global a1=0.9*alfa0
+    global z0 = y[n,3]-r1
+    global alfa = a1
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global z1 = y[n,3]-r1 #g(b0)
+    global acu0 = (y[n,2]+y[n,3])-(i1+r1) #f(a1)
+    global beta = b1
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global acu1 = (y[n,2]+y[n,3])-(i1+r1) #f(a1)
+    global beta = b0
+    while i <= numIte
+        global a = a1-z1*(a1-a0)/(z1-z0)
+        global alfa = a
+        (t,y)=RK4(ti,tf,y0,SIR)
+        global z = y[n,3]-r1 #f(a1)
+        if abs(z) < epsilon
+            global j=2
+            global beta = b0
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global acu0 = (y[n,2]+y[n,3])-(i1+r1) #g(b0)
+            global beta = b1
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global acu1 = (y[n,2]+y[n,3])-(i1+r1) #g(b1)
+            while j <= numIte
+                global b = b1-acu1*(b1-b0)/(acu1-acu0)
+                global beta = b
+                (t,y)=RK4(ti,tf,y0,SIR)
+                global acu = (y[n,2]+y[n,3])-(i1+r1)
+                if  abs(acu) < epsilon 
+                    global j=numIte
+                end
+                global j = j+1
+                global b0 = b1
+                global acu0 = acu1
+                global b1 = b
+                global acu1 = acu
+                global k=k+1
+                println([k, i, j, a0, a1, acu1, b0, b1, z0, z1])
+            end
+            global z =  y[n,3]-r1
+            global alfa = a0
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global z1 =  y[n,3]-r1
+        end
+        global i=i+1
+        global a0=a1
+        global z0=z1
+        global a1=a
+        global z1=z
+        global k=k+1 
+        println([k, i, j, a0, a1, z0, z1])
+        if abs(z1) < epsilon
+            global alfa = a1
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global acu = (y[n,2]+y[n,3])-(i1+r1)
+            if abs(acu) < epsilon
+                break
+            end
+        end
+    end
+    if i == numIte+1
+        println(calibra_alfa_beta_4)
+        (alfa, beta) = calibra_alfa_beta_4(ti,tf,y0,SIR,i1,r1)
+    end
+    return (alfa, beta)
+end
+
+function calibra_alfa_beta_4(ti,tf,y0,SIR,i1,r1)
+    global k=0
+    global i=0
+    global j = 0
+    alfa = alfa0
+    beta  = beta0
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global b0=beta
+    global b1=0.9*beta
+    global a0=alfa0
+    global a1=0.9*alfa0
+    global z0 = y[n,3]-r1
+    global beta = b1
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global z1 = y[n,3]-r1 #g(b0)
+    global acu0 = (y[n,2]+y[n,3])-(i1+r1) #f(a1)
+    global alfa = a1
+    (t,y)=RK4(ti,tf,y0,SIR)
+    global acu1 = (y[n,2]+y[n,3])-(i1+r1) #f(a1)
+    global alfa = a0
+    while i <= numIte
+        global b = b1-z1*(b1-b0)/(z1-z0)
+        global beta = b
+        (t,y)=RK4(ti,tf,y0,SIR)
+        global z = y[n,3]-r1 #f(a1)
+        if abs(z) < epsilon
+            global j=2
+            global alfa = a0
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global acu0 = (y[n,2]+y[n,3])-(i1+r1) #g(b0)
+            global alfa = a1
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global acu1 = (y[n,2]+y[n,3])-(i1+r1) #g(b1)
+            while j <= numIte
+                global a = a1-acu1*(a1-a0)/(acu1-acu0)
+                global alfa = a
+                (t,y)=RK4(ti,tf,y0,SIR)
+                global acu = (y[n,2]+y[n,3])-(i1+r1)
+                if  abs(acu) < epsilon 
+                    global j=numIte
+                end
+                global j = j+1
+                global a0 = a1
+                global acu0 = acu1
+                global a1 = a
+                global acu1 = acu
+                global k=k+1
+                println([k, i, j, a0, a1, acu1, b0, b1, z0, z1])
+            end
+            global z =  y[n,3]-r1
+            global beta = b0
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global z1 =  y[n,3]-r1
+        end
+        global i=i+1
+        global b0=b1
+        global z0=z1
+        global b1=b
+        global z1=z
+        global k=k+1 
+        println([k, i, j, a0, a1, z0, z1])
+        if abs(z1) < epsilon
+            global beta = b1
+            (t,y)=RK4(ti,tf,y0,SIR)
+            global acu = (y[n,2]+y[n,3])-(i1+r1)
+            if abs(acu) < epsilon
+                break
+            end
+        end
+    end
+    if i == numIte+1
+        println("NAO FOI POSSIVEL CALCULAR ALFA E BETA COM A PRECISAO DESEJADA")
+        (alfa, beta) = (0, 0)
     end
     return (alfa, beta)
 end
@@ -208,6 +443,19 @@ par=xf["parâmetros"]
     numIte=par[5,2]
     epsilon= par[6,2]
 
+#= testes
+ti=0
+tf=14
+(n,h)=malha(ti,tf)
+y0=[26164,423,5534]
+alfa=0.081
+beta=0.131
+(t,y)=RK4(ti,tf,y0,SIR)
+y[1401,1:3]
+
+y1=[25882,163,6076]
+=#
+
 #argumentos calibra_alfa_beta
 #reg=1
 ti=0
@@ -244,8 +492,6 @@ resultados_diadia=round.(Int, resultados_diarios(resultados,temp_prev))
 #     label  = [              "infectados" "recuperados" "óbitos"] #sem suscetíveis
 #     )
 # savefig(p,"acumulados")
-
-# XLSX.sheetnames(xf) #não sei se preciso disso aqui!
 
 XLSX.openxlsx(string(ARGS[], "Resultados.xlsx"), mode="w") do xf
     R0 = xf[1]

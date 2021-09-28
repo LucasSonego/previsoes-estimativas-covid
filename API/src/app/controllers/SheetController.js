@@ -86,6 +86,7 @@ class SheetController {
 
   async getSheetData(city, timestamp) {
     let workbook = new Excel.Workbook();
+    var alfa, beta;
     let predictionData = [];
     try {
       await workbook.xlsx
@@ -96,8 +97,8 @@ class SheetController {
           )}`
         )
         .then(() => {
-          var worksheet = workbook.getWorksheet(`${city}`);
-          worksheet.eachRow({}, (row, rowNumber) => {
+          var predictions = workbook.getWorksheet(`${city}`);
+          predictions.eachRow({}, (row, rowNumber) => {
             if (rowNumber > 1) {
               let rowData = {
                 dia: row.values[1],
@@ -110,10 +111,16 @@ class SheetController {
               predictionData.push(rowData);
             }
           });
+          var parameters = workbook.getWorksheet("R0");
+          alfa = parameters.getCell("C2").value;
+          beta = parameters.getCell("D2").value;
         });
     } catch {
       return null;
     }
+
+    if (alfa === 0 && beta === 0) return null;
+
     return predictionData;
   }
 }
