@@ -77,10 +77,15 @@ class PredictionController {
 
         await generatePrediction(timestamp);
 
-        let predictionData = await SheetController.getSheetData(
+        let predictionResults = await SheetController.getSheetData(
           data.cityData.nome,
           timestamp
         );
+
+        let predictionData;
+        if (predictionResults) {
+          predictionData = predictionResults.predictionData;
+        }
 
         await deleteSheets(timestamp);
 
@@ -92,6 +97,8 @@ class PredictionController {
             previsoes: JSON.stringify(predictionData),
             data: data.dateReport.dataValues.dia,
             dataOffset: data.offsetReport.dataValues.dia,
+            alfa: predictionResults.alfa,
+            beta: predictionResults.beta,
           });
 
           return res.send({ ...data, predictions: predictionData });

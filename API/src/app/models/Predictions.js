@@ -7,6 +7,8 @@ class Predictions extends Model {
         previsoes: Sequelize.STRING,
         data: Sequelize.STRING,
         dataOffset: Sequelize.STRING,
+        alfa: Sequelize.DOUBLE,
+        beta: Sequelize.DOUBLE,
       },
       { sequelize, tableName: "previsoes" }
     );

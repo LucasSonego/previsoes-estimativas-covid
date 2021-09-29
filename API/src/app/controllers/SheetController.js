@@ -121,7 +121,7 @@ class SheetController {
 
     if (alfa === 0 && beta === 0) return null;
 
-    return predictionData;
+    return { predictionData, alfa: alfa, beta: beta };
   }
 }
 
